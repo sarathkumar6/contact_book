@@ -5,8 +5,11 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "node server.js",
-		"sever": "nodemon server.js",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"server": "nodemon server.js",
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"client": "npm start --prefix client",
+		"clientinstall": "npm install --prefix client",
+		"dev": "concurrently \"npm run server\" \"npm run client\""
 	},
 	"keywords": [],
 	"author": "",
@@ -17,7 +20,8 @@
 		"express": "^4.17.1",
 		"express-validator": "^6.6.1",
 		"jsonwebtoken": "^8.5.1",
-		"mongoose": "^5.10.11"
+		"mongoose": "^5.10.11",
+		"uuid": "^8.3.1"
 	},
 	"devDependencies": {
 		"concurrently": "^5.3.0",
