@@ -47,7 +47,7 @@ const ContactItem = ({ id, name, email, type, phone }) => {
 };
 
 ContactItem.propTypes = {
-	id: PropTypes.number.isRequired,
+	id: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
 	type: PropTypes.string.isRequired
 };
