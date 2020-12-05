@@ -2,14 +2,16 @@ const express = require('express');
 const router = express.Router();
 const Activity = require('../models/Activity');
 const auth = require('../middleware/auth');
+const authClient = require('../middleware/authClient');
+const Client = require('../models/Client');
 const { validationResult } = require('express-validator');
 
 // @route       GET api/activities
 // @desc        Get all the activities recorded by a farmer
 // @access      Private
-router.get('/', auth, async (request, response) => {
+router.get('/', authClient, async (request, response) => {
 	try {
-		const activities = await Activity.find({ user: request.user.id }).sort({ date: -1 });
+		const activities = await Activity.find({ client: request.client.id }).sort({ date: -1 });
 		response.json(activities);
 	} catch (err) {
 		response.status(500).send(err.message);
@@ -19,15 +21,19 @@ router.get('/', auth, async (request, response) => {
 // @route       POST api/activities
 // @desc        Add a feeding activity to a farmer
 // @access      Private
-router.post('/', [ auth ], async (request, response) => {
+router.post('/', [ authClient ], async (request, response) => {
 	const errors = validationResult(request);
 	if (!errors.isEmpty()) {
 		return response.status(400).json({ errors: errors.array() });
 	}
 	const { numberOfDucks, food, foodType, country, foodQuantity } = request.body;
 	try {
+		const clientInfo = await Client.findById(request.client.id).select('-password');
+		if (clientInfo.type !== 'farmer') {
+			return response.status(401).json({ msg: 'Authorization denied: client not a farmer' });
+		}
 		const newActivity = new Activity({
-			user: request.user.id,
+			client: request.client.id,
 			numberOfDucks,
 			food,
 			foodType,
@@ -43,10 +49,10 @@ router.post('/', [ auth ], async (request, response) => {
 	}
 });
 
-// @route       PUT api/activities
+// @route       PUT api/activities/clients
 // @desc        Update a feeding activity of a farmer
 // @access      Private
-router.put('/:id', auth, async (request, response) => {
+router.put('/:id', authClient, async (request, response) => {
 	const { numberOfDucks, food, foodType, country, foodQuantity } = request.body;
 	const activityFields = {};
 
@@ -57,12 +63,17 @@ router.put('/:id', auth, async (request, response) => {
 	if (country) activityFields.country = country;
 
 	try {
+		console.log(request.params.id);
+		const clientInfo = await Client.findById(request.client.id).select('-password');
+		if (clientInfo.type !== 'farmer') {
+			return response.status(401).json({ msg: 'Authorization denied: client not a farmer' });
+		}
 		let activity = await Activity.findById(request.params.id);
 
 		if (!activity) {
 			return response.status(404).json({ message: 'Activity not found' });
 		}
-		if (activity.user.toString() !== request.user.id) {
+		if (activity.client.toString() !== request.client.id) {
 			return response.status(401).json({ message: 'Not authorized to update activity' });
 		}
 		activity = await Activity.findByIdAndUpdate(request.params.id, { $set: activityFields }, { new: true });
@@ -75,8 +86,13 @@ router.put('/:id', auth, async (request, response) => {
 // @route       DELETE api/activities
 // @desc        Delete a feeding activity of a farmer
 // @access      Private
-router.delete('/:id', auth, async (request, response) => {
+router.delete('/:id', authClient, async (request, response) => {
 	try {
+		const clientInfo = await Client.findById(request.client.id).select('-password');
+		console.log(clientInfo);
+		if (clientInfo.type !== 'farmer') {
+			return response.status(401).json({ msg: 'Authorization denied: client not a farmer' });
+		}
 		let activity = await Activity.findById(request.params.id);
 
 		if (!activity) {

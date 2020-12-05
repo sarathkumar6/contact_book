@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 
 const ActivitySchema = mongoose.Schema({
-	user: {
+	client: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'users'
+		ref: 'clients'
 	},
 	date: {
 		type: Date,
