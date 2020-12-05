@@ -2,18 +2,17 @@ const express = require('express');
 const router = express.Router();
 const Activity = require('../models/Activity');
 const auth = require('../middleware/auth');
-const { check, validationResult } = require('express-validator');
+const { validationResult } = require('express-validator');
 
 // @route       GET api/activities
 // @desc        Get all the activities recorded by a farmer
 // @access      Private
 router.get('/', auth, async (request, response) => {
 	try {
-		const contacts = await Activity.find({ user: request.user.id }).sort({ date: -1 });
-		response.json(contacts);
+		const activities = await Activity.find({ user: request.user.id }).sort({ date: -1 });
+		response.json(activities);
 	} catch (err) {
-		console.log(err.message);
-		response.status(500).send('Server Error');
+		response.status(500).send(err.message);
 	}
 });
 
@@ -27,7 +26,7 @@ router.post('/', [ auth ], async (request, response) => {
 	}
 	const { numberOfDucks, food, foodType, country, foodQuantity } = request.body;
 	try {
-		const newContact = new Activity({
+		const newActivity = new Activity({
 			user: request.user.id,
 			numberOfDucks,
 			food,
@@ -36,8 +35,8 @@ router.post('/', [ auth ], async (request, response) => {
 			country
 		});
 
-		const contact = await newContact.save();
-		response.json(contact);
+		const activity = await newActivity.save();
+		response.json(activity);
 	} catch (err) {
 		console.log(err);
 		response.status(500).send(err.message);
@@ -49,25 +48,25 @@ router.post('/', [ auth ], async (request, response) => {
 // @access      Private
 router.put('/:id', auth, async (request, response) => {
 	const { numberOfDucks, food, foodType, country, foodQuantity } = request.body;
-	const contactFields = {};
+	const activityFields = {};
 
-	if (numberOfDucks) contactFields.numberOfDucks = numberOfDucks;
-	if (food) contactFields.food = food;
-	if (foodType) contactFields.foodType = foodType;
-	if (foodQuantity) contactFields.foodQuantity = foodQuantity;
-	if (country) contactFields.country = country;
+	if (numberOfDucks) activityFields.numberOfDucks = numberOfDucks;
+	if (food) activityFields.food = food;
+	if (foodType) activityFields.foodType = foodType;
+	if (foodQuantity) activityFields.foodQuantity = foodQuantity;
+	if (country) activityFields.country = country;
 
 	try {
-		let contact = await Activity.findById(request.params.id);
+		let activity = await Activity.findById(request.params.id);
 
-		if (!contact) {
-			return response.status(404).json({ message: 'Contact not found' });
+		if (!activity) {
+			return response.status(404).json({ message: 'Activity not found' });
 		}
-		if (contact.user.toString() !== request.user.id) {
-			return response.status(401).json({ message: 'Not authorized to update contact' });
+		if (activity.user.toString() !== request.user.id) {
+			return response.status(401).json({ message: 'Not authorized to update activity' });
 		}
-		contact = await Activity.findByIdAndUpdate(request.params.id, { $set: contactFields }, { new: true });
-		response.json(contact);
+		activity = await Activity.findByIdAndUpdate(request.params.id, { $set: activityFields }, { new: true });
+		response.json(activity);
 	} catch (err) {
 		response.status(500).send(err.message);
 	}
@@ -78,16 +77,16 @@ router.put('/:id', auth, async (request, response) => {
 // @access      Private
 router.delete('/:id', auth, async (request, response) => {
 	try {
-		let contact = await Activity.findById(request.params.id);
+		let activity = await Activity.findById(request.params.id);
 
-		if (!contact) {
-			return response.status(404).json({ message: 'Contact not found' });
+		if (!activity) {
+			return response.status(404).json({ message: 'Activity not found' });
 		}
-		if (contact.user.toString() !== request.user.id) {
-			return response.status(401).json({ message: 'Not authorized to update contact' });
+		if (activity.user.toString() !== request.user.id) {
+			return response.status(401).json({ message: 'Not authorized to update activity' });
 		}
 		await Activity.findByIdAndRemove(request.params.id);
-		response.json({ message: 'Contact removed' });
+		response.json({ message: 'Activity removed' });
 	} catch (err) {
 		response.status(500).send(err.message);
 	}
