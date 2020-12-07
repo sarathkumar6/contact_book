@@ -6,6 +6,9 @@ const ActivitySchema = mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'clients'
 	},
+	clientName: {
+		type: String
+	},
 	date: {
 		type: Date,
 		default: moment()

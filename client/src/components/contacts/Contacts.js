@@ -1,15 +1,19 @@
 import React, { Fragment, useContext, useEffect } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import ContactContext from '../../context/contact/contactContext';
+import ActivityContext from '../../context/activity/activityContext';
 import ContactItem from '../contacts/ContactItem';
 
 const Contacts = (props) => {
 	const contactContext = useContext(ContactContext);
+	//const activityContext = useContext(ActivityContext);
 
 	const { filtered, contacts, getContacts } = contactContext;
+	//const { activities, getActivities } = activityContext;
 
 	useEffect(() => {
 		getContacts();
+		//getActivities();
 		//eslint-disable-next-line
 	}, []);
 

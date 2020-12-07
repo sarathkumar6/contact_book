@@ -2,6 +2,7 @@ import React, { useReducer } from 'react';
 import axios from 'axios';
 import AuthContext from './authContext';
 import authReducer from './authReducer';
+import _ from 'lodash';
 import {
 	REGISTER_FAIL,
 	REGISTER_SUCCESS,
@@ -20,7 +21,8 @@ const AuthState = (props) => {
 		isAuthenticated: null,
 		loading: true,
 		user: null,
-		error: null
+		error: null,
+		type: null
 	};
 
 	const [ state, dispatch ] = useReducer(authReducer, initialState);
@@ -33,6 +35,7 @@ const AuthState = (props) => {
 		}
 		try {
 			const response = await axios.get('api/auth');
+			console.log(response);
 			dispatch({ type: USER_LOADED, payload: response.data });
 		} catch (err) {
 			dispatch({ type: AUTH_ERROR });
@@ -71,10 +74,11 @@ const AuthState = (props) => {
 		};
 		try {
 			const response = await axios.post('/api/auth', logininfo, config);
-			console.log(response);
+			config.headers['x-auth-token'] = response.data.token;
+			const getUserType = await axios.get('/api/auth', config);
 			dispatch({
 				type: LOGIN_SUCCESS,
-				payload: response.data
+				payload: _.merge(response.data, { type: getUserType.data.type })
 			});
 			loadUser();
 		} catch (err) {

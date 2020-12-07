@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Activity = require('../models/Activity');
-const auth = require('../middleware/auth');
-const authClient = require('../middleware/authClient');
+const authClient = require('../middleware/auth');
 const Client = require('../models/Client');
 const { validationResult } = require('express-validator');
 
@@ -11,7 +10,11 @@ const { validationResult } = require('express-validator');
 // @access      Private
 router.get('/', authClient, async (request, response) => {
 	try {
-		const activities = await Activity.find({ client: request.client.id }).sort({ date: -1 });
+		const clientInfo = await Client.findById(request.client.id).select('-password');
+		const isFarmer = clientInfo.type === 'farmer';
+		const activities = isFarmer
+			? await Activity.find({ client: request.client.id }).sort({ date: -1 })
+			: await Activity.find({}).sort({ date: -1 });
 		response.json(activities);
 	} catch (err) {
 		response.status(500).send(err.message);
@@ -29,11 +32,13 @@ router.post('/', [ authClient ], async (request, response) => {
 	const { numberOfDucks, food, foodType, country, foodQuantity } = request.body;
 	try {
 		const clientInfo = await Client.findById(request.client.id).select('-password');
+		console.log('clientInfo: ', clientInfo);
 		if (clientInfo.type !== 'farmer') {
 			return response.status(401).json({ msg: 'Authorization denied: client not a farmer' });
 		}
 		const newActivity = new Activity({
 			client: request.client.id,
+			clientName: clientInfo.name,
 			numberOfDucks,
 			food,
 			foodType,
@@ -65,6 +70,7 @@ router.put('/:id', authClient, async (request, response) => {
 	try {
 		console.log(request.params.id);
 		const clientInfo = await Client.findById(request.client.id).select('-password');
+		console.log('clientInfo: ', clientInfo);
 		if (clientInfo.type !== 'farmer') {
 			return response.status(401).json({ msg: 'Authorization denied: client not a farmer' });
 		}

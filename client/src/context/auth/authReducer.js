@@ -18,7 +18,8 @@ export default (state, action) => {
 				...state,
 				...action.payload,
 				isAuthenticated: true,
-				loading: false
+				loading: false,
+				type: action.payload.type
 			};
 		case REGISTER_FAIL:
 		case AUTH_ERROR:
@@ -43,7 +44,8 @@ export default (state, action) => {
 				...state,
 				isAuthenticated: true,
 				loading: false,
-				user: action.payload
+				user: action.payload,
+				type: action.payload.type
 			};
 		default:
 			return state;

@@ -313,7 +313,7 @@ textarea {
 	display: block;
 	width: 100%;
 	padding: 0.4rem;
-	font-size: 1.2rem;
+	font-size: 1rem;
 	border: 1px solid #ccc;
 }
 
@@ -353,6 +353,12 @@ table th {
 	background: var(--light-color);
 }
 
+.title {
+	font-weight: bold;
+	font-size: 1.5rem;
+	text-align: center;
+	color: var(--primary-color);
+}
 /* Navbar */
 .navbar {
 	display: flex;
@@ -433,6 +439,10 @@ table th {
 
 	.navbar h1 {
 		margin-bottom: 0.6rem;
+	}
+
+	.navbar-title {
+		margin-left: 0.8rem;
 	}
 
 	.navbar ul {

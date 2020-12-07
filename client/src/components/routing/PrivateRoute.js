@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import AuthContext from '../../context/auth/authContext';
 const PrivateRoute = ({ component: Component, ...rest }) => {
 	const authContext = useContext(AuthContext);
-	const { isAuthenticated, loading } = authContext;
+	const { isAuthenticated, loading, type } = authContext;
 	return (
 		<Route
 			{...rest}

@@ -8,14 +8,14 @@ const Register = (props) => {
 		name: '',
 		email: '',
 		password: '',
-		password2: ''
+		password2: '',
+		type: 'farmer'
 	});
 
 	const { register, error, clearErrors, isAuthenticated } = useContext(AuthContext);
 
 	useEffect(
 		() => {
-			console.log(error);
 			if (isAuthenticated) {
 				props.history.push('/');
 			}
@@ -23,15 +23,6 @@ const Register = (props) => {
 				setAlert(error, 'danger');
 				clearErrors();
 			}
-			/**{
-				error &&
-					error.length > 0 &&
-					error.map((eachErr) => {
-						setAlert(eachErr.msg, 'danger');
-					});
-			}
-			clearErrors();*/
-			//eslint-disable-next-line
 		},
 		[ error, isAuthenticated, props.history ]
 	);
@@ -51,11 +42,11 @@ const Register = (props) => {
 			register({ name, email, password });
 		}
 	};
-	const { name, email, password, password2 } = user;
+	const { name, email, password, password2, type } = user;
 	return (
 		<div className='form-container'>
 			<h1>
-				Account <span className='text-primary'>Register</span>
+				Client <span className='text-primary'>Register</span>
 			</h1>
 			<form onSubmit={onSubmitHandler}>
 				<div className='form-group'>
@@ -88,6 +79,9 @@ const Register = (props) => {
 						minLength='6'
 					/>
 				</div>
+				<input type='radio' name='type' value='farmer' checked={type === 'personal'} required />
+				Farmer {''}
+				<input type='radio' name='type' value='scientist' checked={type === 'scientist'} />Scientist
 				<input type='submit' value='Register' className='btn btn-primary btn-block' />
 			</form>
 		</div>

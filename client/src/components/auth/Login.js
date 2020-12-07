@@ -11,12 +11,12 @@ const Login = (props) => {
 	});
 
 	const { setAlert } = alertContext;
-	const { loginUser, error, clearErrors, isAuthenticated } = authContext;
-
+	const { loginUser, error, clearErrors, isAuthenticated, type } = authContext;
+	console.log(type);
 	useEffect(
 		() => {
-			console.log(error);
 			if (isAuthenticated) {
+				console.log(type);
 				props.history.push('/');
 			}
 			if (error === 'Invalid Credentials') {
@@ -33,7 +33,7 @@ const Login = (props) => {
 			clearErrors();*/
 			//eslint-disable-next-line
 		},
-		[ error, isAuthenticated, props.history ]
+		[ error, isAuthenticated, type, props.history ]
 	);
 
 	const onChangeHandler = (e) => {
@@ -56,7 +56,7 @@ const Login = (props) => {
 	return (
 		<div className='form-container'>
 			<h1>
-				Account <span className='text-primary'>Login</span>
+				Client <span className='text-primary'>Login</span>
 			</h1>
 			<form onSubmit={onSubmitHandler}>
 				<div className='form-group'>
