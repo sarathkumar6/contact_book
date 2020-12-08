@@ -4,7 +4,7 @@ import AuthContext from '../../context/auth/authContext';
 
 const Register = (props) => {
 	const { setAlert } = useContext(AlertContext);
-	const [ user, setUser ] = useState({
+	const [ client, setClient ] = useState({
 		name: '',
 		email: '',
 		password: '',
@@ -27,7 +27,7 @@ const Register = (props) => {
 		[ error, isAuthenticated, props.history ]
 	);
 	const onChangeHandler = (e) => {
-		setUser({ ...user, [e.target.name]: e.target.value });
+		setClient({ ...client, [e.target.name]: e.target.value });
 	};
 
 	const onSubmitHandler = (e) => {
@@ -39,10 +39,10 @@ const Register = (props) => {
 			setAlert('Password donot match', 'danger');
 		} else {
 			console.log('Register Submit');
-			register({ name, email, password });
+			register({ name, email, password, type });
 		}
 	};
-	const { name, email, password, password2, type } = user;
+	const { name, email, password, password2, type } = client;
 	return (
 		<div className='form-container'>
 			<h1>
@@ -79,9 +79,15 @@ const Register = (props) => {
 						minLength='6'
 					/>
 				</div>
-				<input type='radio' name='type' value='farmer' checked={type === 'personal'} required />
+				<input type='radio' name='type' value='farmer' checked={type === 'farmer'} onChange={onChangeHandler} />
 				Farmer {''}
-				<input type='radio' name='type' value='scientist' checked={type === 'scientist'} />Scientist
+				<input
+					type='radio'
+					name='type'
+					value='scientist'
+					checked={type === 'scientist'}
+					onChange={onChangeHandler}
+				/>Scientist {''}
 				<input type='submit' value='Register' className='btn btn-primary btn-block' />
 			</form>
 		</div>

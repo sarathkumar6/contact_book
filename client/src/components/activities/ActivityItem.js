@@ -34,19 +34,24 @@ const ActivityItem = ({
 				</span>
 			</h3>
 			<ul className='list'>
+				{numberOfDucks && (
+					<li>
+						<i className='fad fa-duck' /> {`${numberOfDucks}`}
+					</li>
+				)}
 				{food && (
 					<li>
 						<i className='far fa-bread-slice' /> {food && food.charAt(0).toUpperCase() + food.slice(1)}
 					</li>
 				)}
-				{date && (
-					<li>
-						<i className='far fa-calendar-week' /> {moment(date).format('MMM Do YYYY, h:mm:ss A')}
-					</li>
-				)}
 				{foodQuantity && (
 					<li>
 						<i className='fas fa-weight' /> {`${foodQuantity} lb`}
+					</li>
+				)}
+				{date && (
+					<li>
+						<i className='far fa-calendar-week' /> {moment(date).format('MMM Do YYYY, h:mm:ss A')}
 					</li>
 				)}
 			</ul>

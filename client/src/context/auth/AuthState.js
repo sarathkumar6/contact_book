@@ -50,7 +50,7 @@ const AuthState = (props) => {
 			}
 		};
 		try {
-			const response = await axios.post('/api/users', registerInfo, config);
+			const response = await axios.post('/api/clients', registerInfo, config);
 			console.log(response);
 			dispatch({
 				type: REGISTER_SUCCESS,

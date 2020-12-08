@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
 import ActivityContext from '../../context/activity/activityContext';
-import moment from 'moment';
 
 const ActivityForm = () => {
 	const activityContext = useContext(ActivityContext);
@@ -16,7 +15,7 @@ const ActivityForm = () => {
 					foodQuantity: '',
 					country: '',
 					foodType: 'veggies',
-					date: ''
+					numberOfDucks: ''
 				});
 			}
 		},
@@ -28,9 +27,9 @@ const ActivityForm = () => {
 		foodQuantity: '',
 		country: '',
 		foodType: 'veggies',
-		date: ''
+		numberOfDucks: ''
 	});
-	const { food, foodQuantity, country, foodType, date } = activity;
+	const { food, foodQuantity, country, foodType, numberOfDucks } = activity;
 	const onChangeHandler = (e) => {
 		setActivity({ ...activity, [e.target.name]: e.target.value });
 	};
@@ -53,27 +52,32 @@ const ActivityForm = () => {
 			<h2 className='text-primary'> {current ? 'Edit Activity' : 'Add Activity'}</h2>
 			<input
 				type='text'
-				placeholder='Food i.e., Lettuce, Oats'
+				placeholder='Enter no.of.ducks i.e., 5'
+				name='numberOfDucks'
+				value={numberOfDucks}
+				onChange={onChangeHandler}
+			/>
+			<input
+				type='text'
+				placeholder='Enter food i.e., Lettuce, Oats'
 				name='food'
 				value={food}
 				onChange={onChangeHandler}
 			/>
 			<input
 				type='text'
-				placeholder='Quantity in lbs'
+				placeholder='Enter quantity i.e., 5lbs'
 				name='foodQuantity'
 				value={foodQuantity}
 				onChange={onChangeHandler}
 			/>
-			<input type='text' placeholder='Enter Country' name='country' value={country} onChange={onChangeHandler} />
 			<input
 				type='text'
-				placeholder='Date and time'
-				name='date'
-				value={date && moment(date).format('MMM Do YYYY, h:mm:ss A')}
+				placeholder='Enter country i.e., CA, US'
+				name='country'
+				value={country}
 				onChange={onChangeHandler}
 			/>
-			<h5>Food Type</h5>
 			<input
 				type='radio'
 				name='foodType'

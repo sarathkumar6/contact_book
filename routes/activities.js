@@ -94,6 +94,7 @@ router.put('/:id', authClient, async (request, response) => {
 // @access      Private
 router.delete('/:id', authClient, async (request, response) => {
 	try {
+		console.log(request.client);
 		const clientInfo = await Client.findById(request.client.id).select('-password');
 		console.log(clientInfo);
 		if (clientInfo.type !== 'farmer') {
@@ -104,7 +105,7 @@ router.delete('/:id', authClient, async (request, response) => {
 		if (!activity) {
 			return response.status(404).json({ message: 'Activity not found' });
 		}
-		if (activity.user.toString() !== request.user.id) {
+		if (activity.client.toString() !== request.client.id) {
 			return response.status(401).json({ message: 'Not authorized to update activity' });
 		}
 		await Activity.findByIdAndRemove(request.params.id);

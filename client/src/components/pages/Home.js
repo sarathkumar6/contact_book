@@ -1,5 +1,4 @@
 import React, { Fragment, useContext, useEffect } from 'react';
-import Contacts from '../contacts/Contacts';
 import Activities from '../activities/Activities';
 import ContactForm from '../contacts/ContactForm';
 import ActivityForm from '../activities/AcitivtyForm';

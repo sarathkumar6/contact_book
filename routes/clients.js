@@ -18,7 +18,7 @@ router.post(
 		check('type', 'Please enter a client type').not().isEmpty()
 	],
 	async (request, response) => {
-		console.log(request.body);
+		console.log('Req body', request.body);
 		const errors = validationResult(request);
 		if (!errors.isEmpty()) {
 			return response.status(400).json({ errors: errors.array() });
